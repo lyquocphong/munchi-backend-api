@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNumber, validateSync } from 'class-validator';
+import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
 
 enum Environment {
   Development = "development",
@@ -9,11 +9,24 @@ enum Environment {
 }
 
 class EnvironmentVariables {
-  @IsEnum(Environment)
-  NODE_ENV: Environment;
+  //@IsEnum(Environment)
+  //NODE_ENV: Environment;
 
   @IsNumber()
-  PORT: number;
+  APP_PORT: number;
+
+  @IsString()
+  APP_NAME: string;
+
+  @IsString()
+  ORDERING_CO_WEBHOOK_SECRET: string;
+
+  @IsString()
+  DATABASE_URL: string;
+
+  @IsString()
+  SHADOW_DATABASE_URL: string;
+
 }
 
 export function validate(config: Record<string, unknown>) {
