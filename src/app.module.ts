@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { validate } from './config/validation';
 import { AuthModule } from './auth/auth.module';
+import { OrderingCoModule } from './ordering-co/ordering-co.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
       load: [configuration],
     }),
     AuthModule,
+    OrderingCoModule
   ],
   controllers: [AppController],
   providers: [AppService],
