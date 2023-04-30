@@ -1,11 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-export class AuthCredentials {
-  firstName?: string;
-
-  lastname?: string;
-
-  role?: string | number;
-
+export class AuthCredential {
   @IsEmail()
   @IsNotEmpty()
   email: string;
