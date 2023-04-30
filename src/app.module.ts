@@ -6,6 +6,7 @@ import configuration from './config/configuration';
 import { validate } from './config/validation';
 import { AuthModule } from './auth/auth.module';
 import { OrderingCoModule } from './ordering-co/ordering-co.module';
+import { DeliveryModule } from './delivery/delivery.module';
 
 @Module({
   imports: [
@@ -13,9 +14,11 @@ import { OrderingCoModule } from './ordering-co/ordering-co.module';
       isGlobal: true,
       validate,
       load: [configuration],
+      expandVariables: true,
     }),
     AuthModule,
-    OrderingCoModule
+    OrderingCoModule,
+    DeliveryModule
   ],
   controllers: [AppController],
   providers: [AppService],

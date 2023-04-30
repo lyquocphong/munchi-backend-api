@@ -1,25 +1,41 @@
 import { Environment } from "src/common/constants";
 
 export default () => ({
-    APP_PORT: process.env.APP_PORT,
-    APP_NAME: process.env.APP_NAME,
-    ORDERING_CO_WEBHOOK_SECRET: process.env.ORDERING_CO_WEBHOOK_SECRET,
-    WOLT_API_ENDPOINT: getWoltApiEndpoint(),
-    WOLT_KEY: getWoltKey(),
-    WOLT_MERCHANT_ID: getWoltMerchantId(),
-    WOLT_VENUE_ID: null,
-    WOLT_WEBHOOK_SECRET: getWoltWebhookSecret(),
-    WOLT_WEBHOOK_CALLBACK_URL: getWoltWebhookCallback(),
-    HERE_GEOCODING_API_ENDPOINT: process.env.HERE_GEOCODING_API_ENDPOINT,
-    HERE_APP_ID: process.env.HERE_APP_ID,
-    HERE_API_KEY: process.env.HERE_API_KEY,
-    ORDERING_APP_ENDPOINT: process.env.ORDERING_APP_ENDPOINT,
-    ORDERING_APP_API_KEY: process.env.ORDERING_APP_API_KEY,
-    ORDERING_DELIVERY_COMPANY_API_KEY:
-        process.env.ORDERING_DELIVERY_COMPANY_API_KEY,
-    ORDERING_DELIVERY_COMPANY_NAME:
-        process.env.ORDERING_DELIVERY_COMPANY_NAME,
-    TELEGRAM_BOT_KEY: process.env.TELEGRAM_BOT_KEY,
+    app: {
+        port: process.env.APP_PORT,
+        name: process.env.APP_NAME
+    },
+    orderingco: {
+        webhook: {
+            secret: process.env.ORDERING_CO_WEBHOOK_SECRET,
+        },
+        api: {
+            endpoint: process.env.ORDERING_APP_ENDPOINT,
+            key: process.env.ORDERING_APP_API_KEY,
+        },
+        delivery_company: {
+            name: process.env.ORDERING_DELIVERY_COMPANY_NAME,
+            key: process.env.ORDERING_DELIVERY_COMPANY_API_KEY,
+        }
+    },
+    wolt: {
+        api: {
+            endpoint: getWoltApiEndpoint(),
+            key: getWoltKey()
+        },
+        merchant_id: getWoltMerchantId(),
+        webhook: {
+            secret: getWoltWebhookSecret(),
+            callback_url: getWoltWebhookCallback()
+        }
+    },
+    here: {
+        api: {
+            endpoint: process.env.HERE_GEOCODING_API_ENDPOINT,
+            key:  process.env.HERE_API_KEY,
+        },
+        app_id:  process.env.HERE_GEOCODING_API_ENDPOINT,
+    }
 });
 
 function getWoltEnvironment() {

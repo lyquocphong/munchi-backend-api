@@ -8,8 +8,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   let configService = app.get(ConfigService);
-  let appPort = configService.get<number>('APP_PORT') as number;
-  let appName = configService.get<string>('APP_NAME') as string;
+  let appPort = configService.getOrThrow<number>('app.port') as number;
+  let appName = configService.getOrThrow<string>('app.name') as string;
 
   console.log('Welcome to', appName);
 
