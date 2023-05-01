@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserResponse } from './dto/user.dto';
-import { getPublicId } from 'src/common/utils/getPublicId';
+import { UserResponse } from './dto/user-response.dto';
+import { generateUuid } from 'src/common/utils/generateUuid';
 import Cryptr from 'cryptr';
 import { ConfigService } from '@nestjs/config';
-import { OrderingSignInResponseDto } from 'src/ordering-co/dto/ordering-co.dto';
+import { OrderingSignInResponseDto } from 'src/ordering-co/dto/signin-response.dto';
+
 export type AuthTokens = {
   verifyToken: string;
   refreshToken: string;
@@ -13,6 +14,7 @@ export type AuthTokens = {
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService, private configService: ConfigService) {}
+
   async createUser(data: OrderingSignInResponseDto, tokens: AuthTokens, password: string) {
     const cryptr = new Cryptr(this.configService.get<string>('app_secret') as string);
     const hashPassword = cryptr.encrypt(password);
@@ -25,7 +27,7 @@ export class UserService {
           email: data.email,
           hash: hashPassword,
           level: data.level,
-          publicId: getPublicId(),
+          publicId: generateUuid(),
           session: {
             create: {
               accessToken: data.accessToken,
@@ -44,11 +46,13 @@ export class UserService {
           refreshToken: true,
         },
       });
+
       return UserResponse.createFromUser(newUser, tokens);
     } catch (error) {
       console.log(error);
     }
   }
+
   async getUserById(userId: number) {
     return await this.prisma.user.findUnique({
       where: {
