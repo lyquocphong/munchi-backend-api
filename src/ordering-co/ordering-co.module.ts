@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { OrderingCoController } from './ordering-co.controller';
 import { OrderingCoService } from './ordering-co.service';
 
 @Module({
   controllers: [OrderingCoController],
-  providers: [OrderingCoService]
+  providers: [OrderingCoService],
+  exports: [OrderingCoService]
 })
 export class OrderingCoModule {}
