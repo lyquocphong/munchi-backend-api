@@ -40,6 +40,10 @@ export default () => ({
     telegram: {
         bot_key: process.env.TELEGRAM_BOT_KEY,
         chat_id: process.env.TELEGRAM_CHAT_ID,
+    },
+    messagebird: {
+        key: process.env.MESSAGEBIRD_KEY,
+        source_phone_number: process.env.MESSAGEBIRD_SOURCE_PHONE_NUMBER
     }
 });
 
