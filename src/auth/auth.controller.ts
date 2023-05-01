@@ -1,12 +1,27 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { LoginDto } from './dto/auth';
+import { OrderingCoService } from 'src/ordering-co/ordering-co.service';
+import { RefreshJwt } from './guards/refreshJwt.guard';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get()
-  getHello(): string {
-    return this.authService.getHello();
+  @Post('signin')
+  signIn(@Body() loginDto: LoginDto) {
+    return this.authService.signIn(loginDto);
+  }
+
+  @Post('signout')
+  signOut() {
+    return this.authService.signOut();
+  }
+  @UseGuards(RefreshJwt)
+  @Get('refreshToken')
+  getRefreshTokens(@Request() req: any) {
+    const userId = req.user['sub'];
+    const refreshToken = req.user['refreshToken'];
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }
