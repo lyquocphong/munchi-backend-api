@@ -4,7 +4,9 @@ export default () => ({
     app: {
         port: process.env.APP_PORT,
         name: process.env.APP_NAME,
-        environment: process.env.NODE_ENV
+        environment: process.env.NODE_ENV,
+        jwt_secret: process.env.APP_JWT_SECRET,
+        jwt_refresh_secret: process.env.APP_JWT_REFRESH_SECRET,
     },
     orderingco: {
         webhook: {
