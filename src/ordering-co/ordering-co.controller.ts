@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { OrderingCoService } from './ordering-co.service';
 
-@Controller('ordering-co')
+@Controller('orderingco')
 export class OrderingCoController {
     constructor(private orderingCoService: OrderingCoService) {}
 
-    @Get('')
+    @Get('webhook/secret')
     public getSecret(): string {
-        return 'Welcome to ordering co controller';
+        return this.orderingCoService.getWebhookSecret();
     }
 }
