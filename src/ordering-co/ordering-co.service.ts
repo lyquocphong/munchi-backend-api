@@ -7,10 +7,6 @@ import { OrderingSignInResponseDto } from './dto/ordering-co.dto';
 @Injectable()
 export class OrderingCoService {
   constructor(private configService: ConfigService) {}
-<<<<<<< HEAD
-
-=======
->>>>>>> 6f3938c98906eafc567abdcb2373f5be76feda79
   public validateWebhookSecret(checkSecret: string): boolean {
     let webhookSecret = this.configService.get<string>('ordering_co_webhook_secret') as string;
     return webhookSecret === checkSecret;
