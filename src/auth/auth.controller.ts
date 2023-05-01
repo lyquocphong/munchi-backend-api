@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth';
 import { OrderingCoService } from 'src/ordering-co/ordering-co.service';
-import { RefreshJwt } from './guards/refreshJwt.guard';
+import { RefreshJwtGuard } from './guards/refreshJwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -17,11 +17,12 @@ export class AuthController {
   signOut() {
     return this.authService.signOut();
   }
-  @UseGuards(RefreshJwt)
+
+  @UseGuards(RefreshJwtGuard)
   @Get('refreshToken')
   getRefreshTokens(@Request() req: any) {
     const userId = req.user['sub'];
     const refreshToken = req.user['refreshToken'];
-    return this.authService.refreshTokens(userId, refreshToken);
+    return this.authService.refreshTokenValidate(userId, refreshToken);
   }
 }
