@@ -28,7 +28,7 @@ model User {
   lastName     String     @map("last_name")
   email        String     @unique
   hash         String
-  level        Int?
+  level        Int
   publicId     String     @unique @map("public_id")
   refreshToken String     @unique @map("refresh_token")
   session      Session?
