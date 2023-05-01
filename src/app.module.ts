@@ -6,6 +6,9 @@ import configuration from './config/configuration';
 import { validate } from './config/validation';
 import { AuthModule } from './auth/auth.module';
 import { OrderingCoModule } from './ordering-co/ordering-co.module';
+import { UserModule } from './user/user.module';
+import { PrismaModule } from './prisma/prisma.module';
+
 
 @Module({
   imports: [
@@ -14,8 +17,10 @@ import { OrderingCoModule } from './ordering-co/ordering-co.module';
       validate,
       load: [configuration],
     }),
+    PrismaModule,
     AuthModule,
-    OrderingCoModule
+    OrderingCoModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
