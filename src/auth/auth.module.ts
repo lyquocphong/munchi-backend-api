@@ -8,7 +8,7 @@ import { RefreshTokenStrategy } from './strategy/refreshJwt.strategy';
 
 @Module({
   imports: [OrderingCoModule,JwtModule.register({}), UserModule],
-  controllers: [AuthController,RefreshTokenStrategy],
-  providers: [AuthService],
+  controllers: [AuthController],
+  providers: [AuthService,RefreshTokenStrategy],
 })
 export class AuthModule {}
