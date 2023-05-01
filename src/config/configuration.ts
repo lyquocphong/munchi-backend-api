@@ -3,7 +3,8 @@ import { Environment } from "src/common/constants";
 export default () => ({
     app: {
         port: process.env.APP_PORT,
-        name: process.env.APP_NAME
+        name: process.env.APP_NAME,
+        environment: process.env.NODE_ENV
     },
     orderingco: {
         webhook: {
@@ -35,6 +36,10 @@ export default () => ({
             key:  process.env.HERE_API_KEY,
         },
         app_id:  process.env.HERE_GEOCODING_API_ENDPOINT,
+    },
+    telegram: {
+        bot_key: process.env.TELEGRAM_BOT_KEY,
+        chat_id: process.env.TELEGRAM_CHAT_ID,
     }
 });
 

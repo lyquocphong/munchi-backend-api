@@ -32,6 +32,12 @@ class EnvironmentVariables {
 
     @IsString()
     ORDERING_DELIVERY_COMPANY_NAME: string;
+
+    @IsString()
+    TELEGRAM_BOT_KEY: string;
+
+    @IsString()
+    TELEGRAM_CHAT_ID: string;
 }
 
 export function validate(config: Record<string, unknown>) {

@@ -7,6 +7,7 @@ import { validate } from './config/validation';
 import { AuthModule } from './auth/auth.module';
 import { OrderingCoModule } from './ordering-co/ordering-co.module';
 import { DeliveryModule } from './delivery/delivery.module';
+import { MessagingModule } from './messaging/messaging.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { DeliveryModule } from './delivery/delivery.module';
     }),
     AuthModule,
     OrderingCoModule,
-    DeliveryModule
+    DeliveryModule,
+    MessagingModule
   ],
   controllers: [AppController],
   providers: [AppService],
