@@ -19,7 +19,16 @@ class EnvironmentVariables {
   APP_NAME: string;
 
   @IsString()
+  APP_JWT_SECRET: string;
+
+  @IsString()
+  APP_JWT_REFRESH_SECRET: string;
+
+  @IsString()
   ORDERING_CO_WEBHOOK_SECRET: string;
+
+  @IsString()
+  ORDERING_CO_URL: string;
 
   @IsString()
   DATABASE_URL: string;
