@@ -1,4 +1,4 @@
-import { OrderingSignInResponseDto } from 'src/ordering-co/dto/ordering-co.dto';
+import { OrderingSignInResponseDto } from 'src/ordering-co/dto/signin-response.dto';
 
 export class UserResponse {
   email: string;
