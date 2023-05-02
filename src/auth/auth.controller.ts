@@ -23,6 +23,6 @@ export class AuthController {
   getRefreshTokens(@Request() req: any) {
     const userId = req.user['sub'];
     const refreshToken = req.user['refreshToken'];
-    return this.authService.refreshTokenValidate(userId, refreshToken);
+    return this.authService.refreshToken(userId, refreshToken);
   }
 }

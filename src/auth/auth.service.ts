@@ -7,6 +7,7 @@ import * as argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthTokens, UserService } from 'src/user/user.service';
 import { UserResponse } from 'src/user/dto/user-response.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,9 @@ export class AuthService {
     const user = await this.user.getUserById(response.id);
 
     if (!user) {
-      return (await this.user.createUser(response, tokens, loginDto.password)) as UserResponse;
+      const newUser = await this.user.createUser(response, loginDto.password);
+      await this.updateRefreshTokenOnCreateUser(response.id, tokens);
+      return UserResponse.createFromUser(newUser!, tokens);
     }
 
     await this.updateTokens(response.id, tokens.refreshToken, response.accessToken);
@@ -116,13 +119,13 @@ export class AuthService {
   /**
    * The function will validate the refresh token from the client and return a new refresh token when the verify token expire
    *
-   * @param   {number}    userId        [userId description]
-   * @param   {string}    refreshToken  [refreshToken description]
+   * @param   {number}    userId        The id of the user
+   * @param   {string}    refreshToken  The refresh token sent from client
    *
-   * @return  {<userId>}                [return description]
+   * @return  {<userId>}                It will return a new token set
    */
 
-  async refreshTokenValidate(userId: number, refreshToken: string): Promise<AuthTokens> {
+  async refreshToken(userId: number, refreshToken: string): Promise<AuthTokens> {
     const user = await this.user.getUserById(userId);
     if (!user || !user.refreshToken) throw new ForbiddenException('Access Denied');
     const refreshTokenMatches = await argon2.verify(user.refreshToken, refreshToken);
@@ -130,5 +133,17 @@ export class AuthService {
     const token = await this.getTokens(user.userId, user.email);
     await this.updateTokens(user.userId, token.refreshToken);
     return token;
+  }
+/**
+ * The function will update refresh token on create a new user as the default token was an empty string
+ *
+ * @param   {number}            userId  The id of the user
+ * @param   {AuthTokens<User>}  token   The token passing from the parent function
+ *
+ * @return  {Promise<User>}             Return a user
+ */
+  async updateRefreshTokenOnCreateUser(userId: number, token: AuthTokens): Promise<User | null> {
+    const hashedRefreshToken = await argon2.hash(token.refreshToken);
+    return await this.prisma.user.update({ where: { userId: userId }, data: { refreshToken: hashedRefreshToken } });
   }
 }
