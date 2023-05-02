@@ -7,6 +7,7 @@ export default () => ({
         environment: process.env.NODE_ENV,
         jwt_secret: process.env.APP_JWT_SECRET,
         jwt_refresh_secret: process.env.APP_JWT_REFRESH_SECRET,
+        hash_secret: process.env.APP_HASH_SECRET
     },
     orderingco: {
         webhook: {

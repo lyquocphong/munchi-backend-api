@@ -19,6 +19,9 @@ class EnvironmentVariables {
   APP_JWT_REFRESH_SECRET: string;
 
   @IsString()
+  APP_HASH_SECRET: string;
+
+  @IsString()
   DATABASE_URL: string;
 
   @IsString()
