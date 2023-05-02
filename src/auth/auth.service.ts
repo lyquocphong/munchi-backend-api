@@ -144,7 +144,7 @@ export class AuthService {
  * @return  {Promise<User>}             Return a user
  */
 
-  async updateRefreshTokenOnCreateUser(userId: number, token: AuthTokens): Promise<User | null> {
+  async updateRefreshTokenOnCreateUser(userId: number, token: AuthTokens): Promise<User> {
     const hashedRefreshToken = await argon2.hash(token.refreshToken);
     return await this.prisma.user.update({ where: { userId: userId }, data: { refreshToken: hashedRefreshToken } });
   }
