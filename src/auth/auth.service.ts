@@ -61,17 +61,14 @@ export class AuthService {
       email,
     };
 
-    const secret = this.configService.get('app.jwt_secret');
-    const refreshSecret = this.configService.get('app.jwt_refresh_secret');
-
     const verifyToken = await this.jwt.signAsync(payload, {
       expiresIn: '1d',
-      secret: secret,
+      secret: this.configService.get('app.jwt_secret'),
     });
 
     const refreshToken = await this.jwt.signAsync(payload, {
       expiresIn: '14d',
-      secret: refreshSecret,
+      secret: this.configService.get('app.jwt_refresh_secret'),
     });
 
     return {

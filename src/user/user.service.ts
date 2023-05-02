@@ -16,7 +16,7 @@ export class UserService {
   constructor(private prisma: PrismaService, private configService: ConfigService) {}
 
   async createUser(data: OrderingSignInResponseDto, password: string) {
-    const cryptr = new Cryptr(this.configService.get<string>('app.hash_secret') as string);
+    const cryptr = new Cryptr(this.configService.get<string>('app.secret') as string);
     const hashPassword = cryptr.encrypt(password);
 
     try {

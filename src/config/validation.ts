@@ -36,8 +36,6 @@ class EnvironmentVariables {
   ORDERING_CO_WEBHOOK_SECRET: string;
 
   @IsString()
-  ORDERING_CO_URL: string;
-  @IsString()
   ORDERING_DELIVERY_COMPANY_API_KEY: string;
 
   @IsString()

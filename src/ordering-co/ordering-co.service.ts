@@ -19,7 +19,7 @@ export class OrderingCoService {
   async signIn(loginDto: LoginDto): Promise<OrderingSignInResponseDto> {
     const options = {
       method: 'POST',
-      url: `${this.configService.get<string>('ordering_co_url')}/auth`,
+      url: `${this.configService.get<string>('orderingco.api.endpoint')}/auth`,
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
