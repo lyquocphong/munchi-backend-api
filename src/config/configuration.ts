@@ -19,6 +19,7 @@ export default () => ({
     webhook: {
       secret: process.env.ORDERING_CO_WEBHOOK_SECRET,
     },
+    url: process.env.ORDERING_CO_URL,
     api: {
       endpoint: process.env.ORDERING_APP_ENDPOINT,
       key: process.env.ORDERING_APP_API_KEY,

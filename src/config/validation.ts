@@ -28,6 +28,9 @@ class EnvironmentVariables {
   SHADOW_DATABASE_URL: string;
 
   @IsString()
+  ORDERING_CO_URL: string
+
+  @IsString()
   ORDERING_APP_ENDPOINT: string;
 
   @IsString()
