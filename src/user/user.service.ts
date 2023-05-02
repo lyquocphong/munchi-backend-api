@@ -15,9 +15,10 @@ export type AuthTokens = {
 export class UserService {
   constructor(private prisma: PrismaService, private configService: ConfigService) {}
 
-  async createUser(data: OrderingSignInResponseDto, tokens: AuthTokens, password: string) {
-    const cryptr = new Cryptr(this.configService.get<string>('app_secret') as string);
+  async createUser(data: OrderingSignInResponseDto, password: string) {
+    const cryptr = new Cryptr(this.configService.get<string>('app.hash_secret') as string);
     const hashPassword = cryptr.encrypt(password);
+
     try {
       const newUser = await this.prisma.user.create({
         data: {
@@ -35,7 +36,7 @@ export class UserService {
               tokenType: data.tokenType,
             },
           },
-          refreshToken: tokens.refreshToken,
+          refreshToken: '',
         },
         select: {
           firstName: true,
@@ -47,7 +48,7 @@ export class UserService {
         },
       });
 
-      return UserResponse.createFromUser(newUser, tokens);
+      return newUser;
     } catch (error) {
       console.log(error);
     }
