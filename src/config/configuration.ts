@@ -10,6 +10,10 @@ export default () => ({
       refresh_secret: process.env.APP_JWT_REFRESH_SECRET,
     },
     secret: process.env.APP_HASH_SECRET,
+    database: {
+      url: process.env.DATABASE_URL,
+      shadow_url: process.env.SHADOW_DATABASE_URL,
+    },
   },
   orderingco: {
     webhook: {
