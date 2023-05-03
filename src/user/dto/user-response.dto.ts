@@ -12,7 +12,7 @@ export class UserResponse {
     Object.assign(this, partial);
   }
   static createFromUser(
-    user:{
+    user: {
       email: string;
       firstName: string;
       lastName: string;
@@ -33,6 +33,18 @@ export class UserResponse {
       verifyToken: tokens.verifyToken,
       refreshToken: tokens.refreshToken,
     });
+  }
+}
+
+export class UserDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  publicId: string;
+  level: number;
+  refreshToken: string;
+  constructor(partial: Partial<UserDto>) {
+    Object.assign(this, partial);
   }
 }
 
