@@ -14,8 +14,8 @@ export class AuthController {
   }
 
   @Post('signout')
-  signOut() {
-    return this.authService.signOut();
+  signOut(@Body() userPublicId:string) {
+    return this.authService.signOut(userPublicId);
   }
 
   @UseGuards(RefreshJwtGuard)

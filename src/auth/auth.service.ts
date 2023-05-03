@@ -8,7 +8,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthTokens, UserService } from 'src/user/user.service';
 import { UserResponse } from 'src/user/dto/user-response.dto';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -42,8 +41,17 @@ export class AuthService {
     return UserResponse.createFromUser(user, tokens);
   }
 
-  signOut() {
-    throw new NotImplementedException();
+  /**
+   * The function will update the user public id upon called
+   *
+   * @param   {string}           userPublicId  The public id of user
+   *
+   * @return  {Promise<string>}                It return a string notify that the user has successfully logout
+   */
+
+  async signOut(userPublicId: string): Promise<string> {
+    await this.user.updateUserPublicId(userPublicId);
+    return 'Sign out successfully';
   }
 
   /**
@@ -138,7 +146,7 @@ export class AuthService {
    * @param   {number}            userId  The id of the user
    * @param   {AuthTokens}        token   The token passing from the parent function
    *
-   * @return  {Promise<void>}             
+   * @return  {Promise<void>}
    */
 
   async updateRefreshToken(userId: number, token: AuthTokens): Promise<void> {
