@@ -1,12 +1,13 @@
 import { ForbiddenException, Injectable, NotImplementedException } from '@nestjs/common';
-import { LoginDto } from './dto/auth';
+import { AuthTokens, LoginDto } from './dto/auth';
 import { OrderingCoService } from 'src/ordering-co/ordering-co.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthTokens, UserService } from 'src/user/user.service';
+import { UserService } from 'src/user/user.service';
 import { UserResponse } from 'src/user/dto/user-response.dto';
+import { Session } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -27,18 +28,20 @@ export class AuthService {
    */
 
   async signIn(loginDto: LoginDto): Promise<UserResponse> {
-    const response = await this.orderingCoService.signIn(loginDto);
-    const tokens = await this.generateTokens(response.id, response.email);
-    const user = await this.user.findUserById(response.id);
-
-    if (!user) {
-      const newUser = await this.user.createUser(response, loginDto.password);
-      await this.updateRefreshToken(response.id, tokens);
-      return UserResponse.createFromUser(newUser!, tokens);
+    try {
+      const response = await this.orderingCoService.signIn(loginDto);
+      const tokens = await this.generateTokens(response.id, response.email);
+      const user = await this.user.findUserById(response.id);
+      if (!user) {
+        const newUser = await this.user.createUser(response, loginDto.password);
+        await this.updateRefreshToken(response.id, tokens);
+        return UserResponse.createFromUser(newUser!, tokens);
+      }
+      await this.updateTokens(response.id, tokens.refreshToken, response.accessToken);
+      return UserResponse.createFromUser(user, tokens);
+    } catch (error) {
+      throw new ForbiddenException();
     }
-
-    await this.updateTokens(response.id, tokens.refreshToken, response.accessToken);
-    return UserResponse.createFromUser(user, tokens);
   }
 
   /**
@@ -49,8 +52,9 @@ export class AuthService {
    * @return  {Promise<string>}                It return a string notify that the user has successfully logout
    */
 
-  async signOut(userPublicId: string): Promise<string> {
-    await this.user.updateUserPublicId(userPublicId);
+  async signOut(accessToken: string, userId: number): Promise<string> {
+    await this.orderingCoService.signOut(accessToken);
+    await this.deleteSession(userId);
     return 'Sign out successfully';
   }
 
@@ -97,14 +101,26 @@ export class AuthService {
 
   async updateTokens(userId: number, refreshToken: string, accessToken?: string): Promise<void> {
     const hashedRefreshToken = await argon2.hash(refreshToken);
+    const session = await this.prisma.session.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
     const data: any = {
       refreshToken: hashedRefreshToken,
     };
 
-    if (accessToken) {
+    if (accessToken && session) {
       data.session = {
         update: {
           accessToken: accessToken,
+        },
+      };
+    } else {
+      data.session = {
+        create: {
+          accessToken: accessToken,
+          expiresIn: 31536000,
         },
       };
     }
@@ -117,6 +133,7 @@ export class AuthService {
         data,
       });
     } catch (error) {
+      console.log(error);
       throw new ForbiddenException();
     }
   }
@@ -152,5 +169,22 @@ export class AuthService {
   async updateRefreshToken(userId: number, token: AuthTokens): Promise<void> {
     const hashedRefreshToken = await argon2.hash(token.refreshToken);
     await this.prisma.user.update({ where: { userId: userId }, data: { refreshToken: hashedRefreshToken } });
+  }
+
+  async getAccessToken(userId: number): Promise<string> {
+    const session = await this.prisma.session.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+    return session!.accessToken;
+  }
+
+  async deleteSession(userId: number): Promise<Session> {
+    return await this.prisma.session.delete({
+      where: {
+        userId: userId,
+      },
+    });
   }
 }

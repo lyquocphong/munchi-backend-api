@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth';
 import { OrderingCoService } from 'src/ordering-co/ordering-co.service';
 import { RefreshJwtGuard } from './guards/refreshJwt.guard';
+import { JwtGuard } from './guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -13,9 +14,12 @@ export class AuthController {
     return this.authService.signIn(loginDto);
   }
 
+  @UseGuards(JwtGuard)
   @Post('signout')
-  signOut(@Body() userPublicId:string) {
-    return this.authService.signOut(userPublicId);
+  async signOut(@Request() request: any) {
+    const { userId } = request.user;
+    const accessToken = await this.authService.getAccessToken(userId);
+    return this.authService.signOut(accessToken, userId);
   }
 
   @UseGuards(RefreshJwtGuard)
