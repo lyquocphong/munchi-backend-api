@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { MessagingModule } from './messaging/messaging.module';
+import { BusinessModule } from './business/business.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { MessagingModule } from './messaging/messaging.module';
     OrderingCoModule,
     UserModule,
     DeliveryModule,
-    MessagingModule
+    MessagingModule,
+    BusinessModule
   ],
   controllers: [AppController],
   providers: [AppService],

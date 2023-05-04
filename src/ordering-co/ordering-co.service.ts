@@ -1,7 +1,9 @@
-import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { plainToClass } from 'class-transformer';
 import { LoginDto } from 'src/auth/dto/auth';
+import { OrderingBusinessResponseDto } from './dto/business-response.dto';
 import { OrderingSignInResponseDto } from './dto/signin-response.dto';
 
 @Injectable()
@@ -41,13 +43,12 @@ export class OrderingCoService {
         email: signInResponseObject.email,
         accessToken: signInResponseObject.session.access_token,
         tokenType: signInResponseObject.session.token_type,
-        expireIn: signInResponseObject.session.expires_in
-      }
+        expireIn: signInResponseObject.session.expires_in,
+      };
     } catch (error) {
       console.log(error);
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error);
     }
-   
   }
 
   async signOut(accessToken: string): Promise<any> {
@@ -62,11 +63,48 @@ export class OrderingCoService {
     };
     try {
       const response = await axios.request(options);
-      return  response.data.result
+      return response.data.result;
     } catch (error) {
       console.log(error);
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error);
     }
-   
+  }
+
+  async allBusiness(accessToken: string): Promise<any> {
+    const options = {
+      method: 'GET',
+      url: `${this.configService.get<string>('orderingco.url')}business?type=1&params=zones%2Cname&mode=dashboard`,
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    try {
+      const response = await axios.request(options);
+      return response.data.result;
+    } catch (error) {
+      console.log(error);
+      throw new ForbiddenException(error);
+    }
+  }
+
+  async businessById(accessToken: string, businessId: number) {
+    const options = {
+      method: 'GET',
+      url: `${this.configService.get<string>('orderingco.url')}business/${businessId}?type=1&params=zones%2Cname&mode=dashboard`,
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    try {
+      const response = await axios.request(options);
+      return plainToClass(OrderingBusinessResponseDto, response.data.result);
+    } catch (error) {
+      console.log(error);
+      throw new ForbiddenException(error);
+    }
   }
 }
