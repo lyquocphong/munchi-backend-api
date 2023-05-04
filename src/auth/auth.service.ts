@@ -90,7 +90,8 @@ export class AuthService {
   }
 
   /**
-   * update tokens like access,refresh and verify token upon login and return it to client
+   * update tokens like access,refresh and verify token upon login and return it to client.
+   * It will create a new access token when the session is null
    *
    * @param   {number}         userId        The id of user
    * @param   {string}         refreshToken  The token use to update verify token when it expire

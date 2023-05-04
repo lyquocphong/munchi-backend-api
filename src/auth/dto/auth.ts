@@ -9,4 +9,7 @@ export class LoginDto {
   password: string;
 }
 
-
+export class AuthTokens {
+  verifyToken: string;
+  refreshToken: string;
+}
