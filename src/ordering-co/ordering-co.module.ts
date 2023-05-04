@@ -4,6 +4,7 @@ import { OrderingCoService } from './ordering-co.service';
 
 @Module({
   controllers: [OrderingCoController],
-  providers: [OrderingCoService]
+  providers: [OrderingCoService],
+  exports: [OrderingCoService],
 })
 export class OrderingCoModule {}
