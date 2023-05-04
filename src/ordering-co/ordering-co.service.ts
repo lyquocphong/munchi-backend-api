@@ -17,6 +17,7 @@ export class OrderingCoService {
   }
 
   async signIn(loginDto: LoginDto): Promise<OrderingSignInResponseDto> {
+
     const options = {
       method: 'POST',
       url: `${this.configService.get<string>('orderingco.url')}auth`,
@@ -30,9 +31,11 @@ export class OrderingCoService {
         security_recaptcha_auth: '0',
       },
     };
+
     try {
       const response = await axios.request(options);
       const signInResponseObject = response.data.result;
+
       return {
         id: signInResponseObject.id,
         name: signInResponseObject.name,
@@ -41,16 +44,17 @@ export class OrderingCoService {
         email: signInResponseObject.email,
         accessToken: signInResponseObject.session.access_token,
         tokenType: signInResponseObject.session.token_type,
-        expireIn: signInResponseObject.session.expires_in
-      }
+        expireIn: signInResponseObject.session.expires_in,
+      };
+
     } catch (error) {
       console.log(error);
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error);
     }
-   
   }
 
   async signOut(accessToken: string): Promise<any> {
+    
     const options = {
       method: 'POST',
       url: `${this.configService.get<string>('orderingco.url')}auth/logout`,
@@ -60,13 +64,14 @@ export class OrderingCoService {
         Authorization: `Bearer ${accessToken}`,
       },
     };
+
     try {
       const response = await axios.request(options);
-      return  response.data.result
+
+      return response.data.result;
     } catch (error) {
       console.log(error);
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error);
     }
-   
   }
 }

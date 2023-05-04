@@ -7,7 +7,7 @@ import { AuthTokens } from './dto/auth';
 import { Session } from '@prisma/client';
 @Injectable()
 export class SessionService {
-  constructor(private configService: ConfigService, private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async getAccessToken(userId: number): Promise<string> {
     const session = await this.prismaService.session.findUnique({
@@ -15,6 +15,7 @@ export class SessionService {
         userId: userId,
       },
     });
+
     return session!.accessToken;
   }
 
@@ -26,13 +27,16 @@ export class SessionService {
    *
    * @return  {Promise<void>}             The function return nothing
    */
+
   async updateOrCreateSession(userId: number, tokens: AuthTokens): Promise<void> {
     const hashedRefreshToken = await argon2.hash(tokens.refreshToken!);
+
     const session = await this.prismaService.session.findUnique({
       where: {
         userId: userId,
       },
     });
+
     const data: any = {
       refreshToken: hashedRefreshToken,
     };
@@ -72,9 +76,14 @@ export class SessionService {
    *
    * @return  {Promise<void>}             The function return nothing
    */
+
   async hashRefreshToken(userId: number, token: AuthTokens): Promise<void> {
     const hashedRefreshToken = await argon2.hash(token.refreshToken!);
-    await this.prismaService.user.update({ where: { userId: userId }, data: { refreshToken: hashedRefreshToken } });
+    
+    await this.prismaService.user.update({
+      where: { userId: userId },
+      data: { refreshToken: hashedRefreshToken },
+    });
   }
 
   async deleteSession(userId: number): Promise<Session> {

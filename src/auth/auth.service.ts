@@ -33,18 +33,21 @@ export class AuthService {
       const response = await this.orderingCoService.signIn(loginDto);
       const tokens = await this.generateTokens(response.id, response.email);
       const user = await this.userService.findUserById(response.id);
+
       if (!user) {
-        const newUser = await this.userService.createUser(
+        const user = await this.userService.createUser(
           Object.assign({ ...response }, tokens.refreshToken),
           loginDto.password,
         );
         await this.sessionService.hashRefreshToken(response.id, tokens);
-        return UserResponse.createFromUser(newUser!, tokens);
+
+        return UserResponse.createFromUser(user!, tokens);
       }
       await this.sessionService.updateOrCreateSession(response.id, {
         refreshToken: tokens.refreshToken,
         accessToken: response.accessToken,
       });
+
       return UserResponse.createFromUser(user, tokens);
     } catch (error) {
       throw new ForbiddenException();
@@ -107,11 +110,21 @@ export class AuthService {
 
   async refreshToken(userId: number, refreshToken: string): Promise<AuthTokens> {
     const user = await this.userService.findUserById(userId);
-    if (!user || !user.refreshToken) throw new ForbiddenException('Access Denied');
+
+    if (!user || !user.refreshToken) {
+      throw new ForbiddenException('Access Denied');
+    }
+
     const refreshTokenMatches = await argon2.verify(user.refreshToken, refreshToken);
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+
+    if (!refreshTokenMatches) {
+      throw new ForbiddenException('Access Denied');
+    }
+
     const token = await this.generateTokens(user.userId, user.email);
+
     await this.sessionService.updateOrCreateSession(user.userId, { refreshToken: refreshToken });
+
     return token;
   }
 }

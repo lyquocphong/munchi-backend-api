@@ -24,6 +24,7 @@ export class UserService {
     const hashPassword = cryptr.encrypt(password);
 
     try {
+
       const newUser = await this.prisma.user.create({
         data: {
           userId: data.id,
@@ -51,6 +52,7 @@ export class UserService {
           refreshToken: true,
         },
       });
+
       return newUser;
     } catch (error) {
       console.log(error);
@@ -67,6 +69,7 @@ export class UserService {
    */
 
   async findUserById(userId: number) {
+    
     return await this.prisma.user.findUnique({
       where: {
         userId: userId,
