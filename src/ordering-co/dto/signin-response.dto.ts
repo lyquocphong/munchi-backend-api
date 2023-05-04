@@ -25,4 +25,7 @@ export class OrderingSignInResponseDto {
   
   @Expose()
   expireIn: number;
+
+  @Expose()
+  refreshToken?: string;
 }

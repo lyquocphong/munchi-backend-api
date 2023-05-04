@@ -40,6 +40,7 @@ export class UserService {
               tokenType: data.tokenType,
             },
           },
+          refreshToken: data.refreshToken as string
         },
         select: {
           firstName: true,

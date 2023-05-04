@@ -20,8 +20,8 @@ export class UserResponse {
       publicId: string;
     },
     tokens: {
-      verifyToken: string;
-      refreshToken: string;
+      verifyToken?: string;
+      refreshToken?: string;
     },
   ) {
     return new UserResponse({
@@ -30,8 +30,8 @@ export class UserResponse {
       lastName: user.lastName,
       level: user.level as number,
       publicId: user.publicId,
-      verifyToken: tokens.verifyToken,
-      refreshToken: tokens.refreshToken,
+      verifyToken: tokens.verifyToken as string,
+      refreshToken: tokens.refreshToken as string,
     });
   }
 }

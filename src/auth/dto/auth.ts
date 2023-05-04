@@ -9,7 +9,8 @@ export class LoginDto {
   password: string;
 }
 
-export class AuthTokens {
-  verifyToken: string;
-  refreshToken: string;
+export interface AuthTokens {
+  verifyToken?: string;
+  refreshToken?: string;
+  accessToken?:string
 }

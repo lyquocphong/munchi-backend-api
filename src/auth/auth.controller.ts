@@ -4,10 +4,11 @@ import { LoginDto } from './dto/auth';
 import { OrderingCoService } from 'src/ordering-co/ordering-co.service';
 import { RefreshJwtGuard } from './guards/refreshJwt.guard';
 import { JwtGuard } from './guards/jwt.guard';
+import { SessionService } from './session.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly sessionService: SessionService) {}
 
   @Post('signin')
   signIn(@Body() loginDto: LoginDto) {
@@ -18,7 +19,7 @@ export class AuthController {
   @Post('signout')
   async signOut(@Request() request: any) {
     const { userId } = request.user;
-    const accessToken = await this.authService.getAccessToken(userId);
+    const accessToken = await this.sessionService.getAccessToken(userId);
     return this.authService.signOut(accessToken, userId);
   }
 
