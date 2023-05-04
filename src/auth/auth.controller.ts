@@ -19,8 +19,7 @@ export class AuthController {
   @Post('signout')
   async signOut(@Request() request: any) {
     const { userId } = request.user;
-    const accessToken = await this.sessionService.getAccessToken(userId);
-    return this.authService.signOut(accessToken, userId);
+    return this.authService.signOut(userId);
   }
 
   @UseGuards(RefreshJwtGuard)

@@ -59,7 +59,8 @@ export class AuthService {
    * @return  {Promise<string>}                It return a string notify that the user has successfully logout
    */
 
-  async signOut(accessToken: string, userId: number): Promise<void> {
+  async signOut(userId: number): Promise<void> {
+    const accessToken = await this.sessionService.getAccessToken(userId);
     await this.orderingCoService.signOut(accessToken);
     await this.sessionService.deleteSession(userId);
   }

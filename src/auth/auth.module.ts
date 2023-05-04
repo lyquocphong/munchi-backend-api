@@ -9,9 +9,9 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 import { SessionService } from './session.service';
 
 @Module({
-  imports: [OrderingCoModule,JwtModule.register({}), UserModule],
+  imports: [OrderingCoModule, JwtModule.register({}), UserModule],
   controllers: [AuthController],
-  providers: [AuthService,RefreshTokenStrategy,JwtStrategy,SessionService],
-  exports:[SessionService, AuthService]
+  providers: [AuthService, RefreshTokenStrategy, JwtStrategy, SessionService],
+  exports: [SessionService, AuthService],
 })
 export class AuthModule {}
