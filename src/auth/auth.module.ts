@@ -11,5 +11,6 @@ import { JwtStrategy } from './strategy/jwt.strategy';
   imports: [OrderingCoModule,JwtModule.register({}), UserModule],
   controllers: [AuthController],
   providers: [AuthService,RefreshTokenStrategy,JwtStrategy],
+  exports: [AuthService]
 })
 export class AuthModule {}

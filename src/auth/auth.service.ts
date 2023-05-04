@@ -15,7 +15,7 @@ export class AuthService {
     private readonly orderingCoService: OrderingCoService,
     private configService: ConfigService,
     private readonly jwt: JwtService,
-    private readonly prisma: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly user: UserService,
   ) {}
 
@@ -31,7 +31,7 @@ export class AuthService {
     try {
       const response = await this.orderingCoService.signIn(loginDto);
       const tokens = await this.generateTokens(response.id, response.email);
-      const user = await this.user.findUserById(response.id);
+      const user = await this.user.findUser({ userId: response.id });
       if (!user) {
         const newUser = await this.user.createUser(response, loginDto.password);
         await this.updateRefreshToken(response.id, tokens);
@@ -102,7 +102,7 @@ export class AuthService {
 
   async updateTokens(userId: number, refreshToken: string, accessToken?: string): Promise<void> {
     const hashedRefreshToken = await argon2.hash(refreshToken);
-    const session = await this.prisma.session.findUnique({
+    const session = await this.prismaService.session.findUnique({
       where: {
         userId: userId,
       },
@@ -121,13 +121,12 @@ export class AuthService {
       data.session = {
         create: {
           accessToken: accessToken,
-          expiresIn: 31536000,
         },
       };
     }
 
     try {
-      await this.prisma.user.update({
+      await this.prismaService.user.update({
         where: {
           userId: userId,
         },
@@ -149,7 +148,7 @@ export class AuthService {
    */
 
   async refreshToken(userId: number, refreshToken: string): Promise<AuthTokens> {
-    const user = await this.user.findUserById(userId);
+    const user = await this.user.findUser({ userId: userId });
     if (!user || !user.refreshToken) throw new ForbiddenException('Access Denied');
     const refreshTokenMatches = await argon2.verify(user.refreshToken, refreshToken);
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
@@ -169,11 +168,11 @@ export class AuthService {
 
   async updateRefreshToken(userId: number, token: AuthTokens): Promise<void> {
     const hashedRefreshToken = await argon2.hash(token.refreshToken);
-    await this.prisma.user.update({ where: { userId: userId }, data: { refreshToken: hashedRefreshToken } });
+    await this.prismaService.user.update({ where: { userId: userId }, data: { refreshToken: hashedRefreshToken } });
   }
 
   async getAccessToken(userId: number): Promise<string> {
-    const session = await this.prisma.session.findUnique({
+    const session = await this.prismaService.session.findUnique({
       where: {
         userId: userId,
       },
@@ -182,7 +181,7 @@ export class AuthService {
   }
 
   async deleteSession(userId: number): Promise<Session> {
-    return await this.prisma.session.delete({
+    return await this.prismaService.session.delete({
       where: {
         userId: userId,
       },
