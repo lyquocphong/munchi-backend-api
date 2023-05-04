@@ -6,6 +6,8 @@ import configuration from './config/configuration';
 import { validate } from './config/validation';
 import { AuthModule } from './auth/auth.module';
 import { OrderingCoModule } from './ordering-co/ordering-co.module';
+import { UserModule } from './user/user.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { MessagingModule } from './messaging/messaging.module';
 
@@ -17,8 +19,10 @@ import { MessagingModule } from './messaging/messaging.module';
       load: [configuration],
       expandVariables: true,
     }),
+    PrismaModule,
     AuthModule,
     OrderingCoModule,
+    UserModule,
     DeliveryModule,
     MessagingModule
   ],
