@@ -42,7 +42,7 @@ export class UserDto {
   email: string;
   publicId: string;
   level: number;
-  refreshToken: string;
+  refreshToken: string | null;
   constructor(partial: Partial<UserDto>) {
     Object.assign(this, partial);
   }
