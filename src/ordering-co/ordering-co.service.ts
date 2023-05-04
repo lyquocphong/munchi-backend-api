@@ -19,7 +19,7 @@ export class OrderingCoService {
   async signIn(loginDto: LoginDto): Promise<OrderingSignInResponseDto> {
     const options = {
       method: 'POST',
-      url: `${this.configService.get<string>('orderingco.api.endpoint')}/auth`,
+      url: `${this.configService.get<string>('orderingco.url')}auth`,
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
@@ -45,7 +45,27 @@ export class OrderingCoService {
       }
     } catch (error) {
       console.log(error);
-      throw new ForbiddenException
+      throw new ForbiddenException(error)
+    }
+   
+  }
+
+  async signOut(accessToken: string): Promise<any> {
+    const options = {
+      method: 'POST',
+      url: `${this.configService.get<string>('orderingco.url')}auth/logout`,
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    try {
+      const response = await axios.request(options);
+      return  response.data.result
+    } catch (error) {
+      console.log(error);
+      throw new ForbiddenException(error)
     }
    
   }
