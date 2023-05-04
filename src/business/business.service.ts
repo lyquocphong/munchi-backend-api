@@ -33,9 +33,7 @@ export class BusinessService {
       const user = await this.userService.findUser({ publicId: userPublicId }, { business: true });
       if (!user) throw new ForbiddenException('Something wrong happend');
       await response.map(async (business: any) => {
-        console.log(business.id);
         const existedBusiness = await this.findBusiness({ businessId: business.id });
-        console.log('Existing business: ', existedBusiness);
         if (existedBusiness) {
           return user.business;
         } else {
@@ -79,7 +77,6 @@ export class BusinessService {
    */
   async findById(accessToken: string, businessPublicId: string): Promise<OrderingBusinessResponseDto> {
     const business = await this.findBusiness({ publicId: businessPublicId });
-    console.log(business);
     const response = await this.orderingCoService.businessById(accessToken, business.businessId);
     return response;
   }
