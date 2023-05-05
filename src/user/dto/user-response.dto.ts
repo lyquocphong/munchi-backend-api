@@ -8,9 +8,11 @@ export class UserResponse {
   publicId: string;
   verifyToken: string;
   refreshToken: string;
+
   constructor(partial: UserResponse) {
     Object.assign(this, partial);
   }
+
   static createFromUser(
     user: {
       email: string;
@@ -43,6 +45,7 @@ export class UserDto {
   publicId: string;
   level: number;
   refreshToken: string | null;
+
   constructor(partial: Partial<UserDto>) {
     Object.assign(this, partial);
   }
@@ -56,9 +59,11 @@ export class UserData {
   accessToken: string;
   tokenType: string;
   expireIn: number;
+
   constructor(partial: Partial<UserData>) {
     Object.assign(this, partial);
   }
+
   static createFromOrderingSignInReponse(data: OrderingSignInResponseDto) {
     return new UserData({
       userId: data.id,
